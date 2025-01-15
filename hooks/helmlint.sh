@@ -147,9 +147,11 @@ for file in "$@"; do
     if contains_element "$file_chart_path" "${seen_chart_paths[@]}"; then
       debug "Already linted $file_chart_path"
     elif [[ -z "$linter_values_arg" ]]; then
+      helm dep update
       helm lint $helm_lint_opts "$file_chart_path"
       seen_chart_paths+=( "$file_chart_path" )
     else
+      helm dep update
       # Combine both linter_values.yaml and values.yaml
       helm lint $helm_lint_opts -f "$file_chart_path/values.yaml" -f "$linter_values_arg" "$file_chart_path"
       seen_chart_paths+=( "$file_chart_path" )
